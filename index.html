@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+    <title>Moving Text</title>
+</head>
+<body>
+    <style>
+        body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #000;
+}
+
+canvas {
+    border: 1px solid #fff;
+}
+
+    </style>
+    <canvas id="moving-text-canvas"></canvas>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const canvas = document.getElementById("moving-text-canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const texts = [];
+
+    function createText() {
+        return {
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 2, // Random horizontal velocity
+            vy: (Math.random() - 0.5) * 2, // Random vertical velocity
+            color: `rgb(${Math.random() * 256}, ${Math.random() * 256}, ${Math.random() * 256})`,
+            size: Math.floor(Math.random() * 30) + 20, // Random font size between 20 and 50
+        };
+    }
+
+    function moveText(text) {
+        text.x += text.vx;
+        text.y += text.vy;
+
+        // Check for collision with canvas boundaries
+        if (text.x < 0 || text.x > canvas.width || text.y < 0 || text.y > canvas.height) {
+            // Reset position if text goes out of bounds
+            text.x = Math.random() * canvas.width;
+            text.y = Math.random() * canvas.height;
+        }
+    }
+
+    function drawText(text) {
+        ctx.font = `${text.size}px Arial`;
+        ctx.fillStyle = text.color;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("TÙNG", text.x, text.y);
+        ctx.fillText("NGU", text.x*2, text.y/2);
+        ctx.fillText("Celica 0-8", text.x*1.3, text.y/4);
+        ctx.fillText("Omen thua aduin", text.x*3, text.y/1.5);
+    }
+
+    function drawFrame() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        texts.forEach((text) => {
+            moveText(text);
+            drawText(text);
+        });
+
+        requestAnimationFrame(drawFrame);
+    }
+
+    // Create initial set of texts
+    for (let i = 0; i < 10; i++) {
+        texts.push(createText());
+    }
+
+    // Start the animation
+    drawFrame();
+});
+
+    </script>
+</body>
+</html>
